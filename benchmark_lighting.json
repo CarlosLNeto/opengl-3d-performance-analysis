@@ -1,0 +1,130 @@
+{
+    "timestamp": "2025-10-29T09:08:03.264533",
+    "system_info": {
+        "cpu": 8,
+        "cpu_logical": 8,
+        "gpu_available": false
+    },
+    "results": [
+        {
+            "triangle_count": 100,
+            "light_type": "none",
+            "avg_fps": 130.71275087397015,
+            "min_fps": 9.194123552699072,
+            "max_fps": 522.199203187251,
+            "avg_cpu": 2.62974358974359,
+            "avg_gpu": 0,
+            "total_frames": 585
+        },
+        {
+            "triangle_count": 100,
+            "light_type": "omnidirectional",
+            "avg_fps": 225.8156147801211,
+            "min_fps": 17.49171768395416,
+            "max_fps": 61680.94117647059,
+            "avg_cpu": 1.6595959595959595,
+            "avg_gpu": 0,
+            "total_frames": 594
+        },
+        {
+            "triangle_count": 100,
+            "light_type": "spot",
+            "avg_fps": 251.9118212697457,
+            "min_fps": 53.53906638924701,
+            "max_fps": 76260.07272727272,
+            "avg_cpu": 1.4565217391304348,
+            "avg_gpu": 0,
+            "total_frames": 598
+        },
+        {
+            "triangle_count": 100,
+            "light_type": "multiple",
+            "avg_fps": 238.43292563627278,
+            "min_fps": 44.3203854769855,
+            "max_fps": 67650.06451612903,
+            "avg_cpu": 2.8092127303182584,
+            "avg_gpu": 0,
+            "total_frames": 597
+        },
+        {
+            "triangle_count": 500,
+            "light_type": "none",
+            "avg_fps": 260.3624503336623,
+            "min_fps": 65.533952063998,
+            "max_fps": 83886.08,
+            "avg_cpu": 2.1201342281879194,
+            "avg_gpu": 0,
+            "total_frames": 596
+        },
+        {
+            "triangle_count": 500,
+            "light_type": "omnidirectional",
+            "avg_fps": 334.0038361289184,
+            "min_fps": 30.59235757058562,
+            "max_fps": 127100.12121212122,
+            "avg_cpu": 1.3537942664418212,
+            "avg_gpu": 0,
+            "total_frames": 593
+        },
+        {
+            "triangle_count": 500,
+            "light_type": "spot",
+            "avg_fps": 334.0029337499907,
+            "min_fps": 52.550981030896835,
+            "max_fps": 127100.12121212122,
+            "avg_cpu": 1.6581787521079256,
+            "avg_gpu": 0,
+            "total_frames": 593
+        },
+        {
+            "triangle_count": 500,
+            "light_type": "multiple",
+            "avg_fps": 187.61132997789682,
+            "min_fps": 63.828585342098854,
+            "max_fps": 40329.846153846156,
+            "avg_cpu": 0.7558528428093646,
+            "avg_gpu": 0,
+            "total_frames": 598
+        },
+        {
+            "triangle_count": 1000,
+            "light_type": "none",
+            "avg_fps": 443.591614869109,
+            "min_fps": 60.60257188267592,
+            "max_fps": 144631.1724137931,
+            "avg_cpu": 1.5221662468513855,
+            "avg_gpu": 0,
+            "total_frames": 397
+        },
+        {
+            "triangle_count": 1000,
+            "light_type": "omnidirectional",
+            "avg_fps": 401.6702492030161,
+            "min_fps": 44.06892493906027,
+            "max_fps": 123361.88235294117,
+            "avg_cpu": 2.012928759894459,
+            "avg_gpu": 0,
+            "total_frames": 379
+        },
+        {
+            "triangle_count": 1000,
+            "light_type": "spot",
+            "avg_fps": 409.50774804347043,
+            "min_fps": 43.59620821553301,
+            "max_fps": 123361.88235294117,
+            "avg_cpu": 3.432065217391304,
+            "avg_gpu": 0,
+            "total_frames": 368
+        },
+        {
+            "triangle_count": 1000,
+            "light_type": "multiple",
+            "avg_fps": 102.20792567694886,
+            "min_fps": 56.56741338152589,
+            "max_fps": 9177.908096280087,
+            "avg_cpu": 2.7669191919191922,
+            "avg_gpu": 0,
+            "total_frames": 396
+        }
+    ]
+}

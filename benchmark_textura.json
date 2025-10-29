@@ -1,0 +1,186 @@
+{
+    "timestamp": "2025-10-29T09:09:25.369976",
+    "system_info": {
+        "cpu": 8,
+        "cpu_logical": 8,
+        "gpu_available": false
+    },
+    "results": [
+        {
+            "triangle_count": 100,
+            "use_texture": false,
+            "texture_size": "none",
+            "avg_fps": 130.27943451219764,
+            "min_fps": 10.919794533208714,
+            "max_fps": 1264.487187217365,
+            "avg_cpu": 1.857312925170068,
+            "avg_gpu": 0,
+            "total_frames": 588
+        },
+        {
+            "triangle_count": 500,
+            "use_texture": false,
+            "texture_size": "none",
+            "avg_fps": 173.0844900634693,
+            "min_fps": 65.11984350013196,
+            "max_fps": 31300.776119402984,
+            "avg_cpu": 2.298833333333333,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 1000,
+            "use_texture": false,
+            "texture_size": "none",
+            "avg_fps": 249.57978849009018,
+            "min_fps": 89.9987983864046,
+            "max_fps": 77672.29629629629,
+            "avg_cpu": 1.4273333333333333,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 2000,
+            "use_texture": false,
+            "texture_size": "none",
+            "avg_fps": 418.77288062619635,
+            "min_fps": 60.284642472152356,
+            "max_fps": 167772.16,
+            "avg_cpu": 2.0824074074074073,
+            "avg_gpu": 0,
+            "total_frames": 540
+        },
+        {
+            "triangle_count": 100,
+            "use_texture": true,
+            "texture_size": "64x64",
+            "avg_fps": 364.40776623706125,
+            "min_fps": 25.077750938703275,
+            "max_fps": 144631.1724137931,
+            "avg_cpu": 1.9639865996649917,
+            "avg_gpu": 0,
+            "total_frames": 597
+        },
+        {
+            "triangle_count": 100,
+            "use_texture": true,
+            "texture_size": "128x128",
+            "avg_fps": 215.10920940518838,
+            "min_fps": 66.62172593992725,
+            "max_fps": 52428.8,
+            "avg_cpu": 1.8463333333333332,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 100,
+            "use_texture": true,
+            "texture_size": "256x256",
+            "avg_fps": 211.87425780218808,
+            "min_fps": 63.5279220877573,
+            "max_fps": 52428.8,
+            "avg_cpu": 0.943594009983361,
+            "avg_gpu": 0,
+            "total_frames": 601
+        },
+        {
+            "triangle_count": 500,
+            "use_texture": true,
+            "texture_size": "64x64",
+            "avg_fps": 203.46168354916674,
+            "min_fps": 95.27528791767939,
+            "max_fps": 49932.19047619047,
+            "avg_cpu": 2.6455,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 500,
+            "use_texture": true,
+            "texture_size": "128x128",
+            "avg_fps": 361.9820134296132,
+            "min_fps": 75.24360009328525,
+            "max_fps": 144631.1724137931,
+            "avg_cpu": 0.7853333333333333,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 500,
+            "use_texture": true,
+            "texture_size": "256x256",
+            "avg_fps": 194.00570314766756,
+            "min_fps": 72.28069207968566,
+            "max_fps": 43690.666666666664,
+            "avg_cpu": 1.8471666666666666,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 1000,
+            "use_texture": true,
+            "texture_size": "64x64",
+            "avg_fps": 320.597358567552,
+            "min_fps": 63.73740996261739,
+            "max_fps": 119837.25714285714,
+            "avg_cpu": 1.2619765494137354,
+            "avg_gpu": 0,
+            "total_frames": 597
+        },
+        {
+            "triangle_count": 1000,
+            "use_texture": true,
+            "texture_size": "128x128",
+            "avg_fps": 325.6996732058311,
+            "min_fps": 87.6204641835008,
+            "max_fps": 123361.88235294117,
+            "avg_cpu": 1.9230000000000003,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 1000,
+            "use_texture": true,
+            "texture_size": "256x256",
+            "avg_fps": 332.33146892812744,
+            "min_fps": 75.35715697371494,
+            "max_fps": 127100.12121212122,
+            "avg_cpu": 1.7809682804674456,
+            "avg_gpu": 0,
+            "total_frames": 599
+        },
+        {
+            "triangle_count": 2000,
+            "use_texture": true,
+            "texture_size": "64x64",
+            "avg_fps": 473.608248845219,
+            "min_fps": 39.76133552001669,
+            "max_fps": 139810.13333333333,
+            "avg_cpu": 3.38757225433526,
+            "avg_gpu": 0,
+            "total_frames": 346
+        },
+        {
+            "triangle_count": 2000,
+            "use_texture": true,
+            "texture_size": "128x128",
+            "avg_fps": 463.05775992631754,
+            "min_fps": 46.75507201141481,
+            "max_fps": 139810.13333333333,
+            "avg_cpu": 3.9747899159663866,
+            "avg_gpu": 0,
+            "total_frames": 357
+        },
+        {
+            "triangle_count": 2000,
+            "use_texture": true,
+            "texture_size": "256x256",
+            "avg_fps": 375.2433065288775,
+            "min_fps": 55.44207687833765,
+            "max_fps": 110376.42105263157,
+            "avg_cpu": 3.7517808219178086,
+            "avg_gpu": 0,
+            "total_frames": 365
+        }
+    ]
+}

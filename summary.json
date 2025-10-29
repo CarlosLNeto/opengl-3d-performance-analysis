@@ -1,0 +1,51 @@
+{
+    "timestamp": "2025-10-29T09:09:28.002788",
+    "benchmarks": {
+        "benchmark_sem_textura": {
+            "system_info": {
+                "cpu": 8,
+                "cpu_logical": 8,
+                "cpu_freq": 4056,
+                "ram": 16.0,
+                "gpu_available": false,
+                "gpu_count": 0,
+                "gpu_info": []
+            },
+            "num_tests": 8,
+            "timestamp": "2025-10-29T09:07:02.203129",
+            "fps_range": {
+                "min": 107.49235143343307,
+                "max": 147.131668998793,
+                "avg": 127.70550024181486
+            }
+        },
+        "benchmark_lighting": {
+            "system_info": {
+                "cpu": 8,
+                "cpu_logical": 8,
+                "gpu_available": false
+            },
+            "num_tests": 12,
+            "timestamp": "2025-10-29T09:08:03.264533",
+            "fps_range": {
+                "min": 102.20792567694886,
+                "max": 443.591614869109,
+                "avg": 276.6526000452602
+            }
+        },
+        "benchmark_textura": {
+            "system_info": {
+                "cpu": 8,
+                "cpu_logical": 8,
+                "gpu_available": false
+            },
+            "num_tests": 16,
+            "timestamp": "2025-10-29T09:09:25.369976",
+            "fps_range": {
+                "min": 130.27943451219764,
+                "max": 473.608248845219,
+                "avg": 300.8184402040477
+            }
+        }
+    }
+}

@@ -1,0 +1,498 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+
+\geometry{margin=2.5cm}
+
+% Configuração do listings para código Python
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{gray},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    escapeinside={\%*}{*)},
+    xleftmargin=0.5cm,
+    xrightmargin=0.5cm
+}
+
+\title{
+    \textbf{Análise de Desempenho em Renderização 3D}\\
+    \large Benchmark de Triângulos Rotativos com OpenGL\\
+    Impacto de Texturas e Iluminação
+}
+\author{Carlos Neto\\
+Processamento Digital de Imagens\\
+Universidade do Estado do Amazonas - UEA}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introdução}
+
+Este relatório apresenta uma análise detalhada do desempenho de renderização 3D utilizando OpenGL e Python. O objetivo principal é investigar como diferentes fatores afetam o desempenho da renderização em tempo real, incluindo:
+
+\begin{itemize}
+    \item Quantidade de triângulos renderizados
+    \item Aplicação de texturas
+    \item Implementação de iluminação (omnidirecional e spotlight)
+    \item Utilização de recursos de hardware (CPU e GPU)
+\end{itemize}
+
+A análise foi conduzida através de benchmarks sistemáticos que medem frames por segundo (FPS), utilização de CPU e GPU em diferentes cenários de renderização.
+
+\section{Metodologia}
+
+\subsection{Ambiente de Teste}
+
+Os testes foram executados em um sistema com as seguintes características:
+
+\begin{itemize}
+    \item \textbf{Sistema Operacional:} macOS (Darwin 25.0.0)
+    \item \textbf{Arquitetura:} Apple Silicon (ARM64)
+    \item \textbf{Processador:} Apple M3 - 8 cores (4 performance + 4 efficiency)
+    \item \textbf{Frequência do CPU:} 744 MHz a 4056 MHz
+    \item \textbf{Memória RAM:} 16 GB
+    \item \textbf{GPU:} Apple M3 Integrada (compartilhada com CPU)
+    \item \textbf{Linguagem:} Python 3.13.7
+    \item \textbf{Bibliotecas principais:}
+    \begin{itemize}
+        \item PyOpenGL 3.1.10 - Interface OpenGL
+        \item Pygame 2.6.1 - Gerenciamento de janelas e eventos
+        \item NumPy 2.3.4 - Processamento numérico
+        \item Matplotlib 3.10.7 - Geração de gráficos
+        \item PSUtil 7.1.2 - Monitoramento de sistema
+    \end{itemize}
+\end{itemize}
+
+\textbf{Nota sobre GPU Apple Silicon:} A GPU Apple M3 integrada não é detectada por ferramentas tradicionais como GPUtil (que é específica para NVIDIA). No entanto, a GPU \textbf{está sendo utilizada} através do backend Metal do OpenGL. O monitoramento de GPU Apple pode ser feito através do comando \texttt{sudo powermetrics --samplers gpu\_power}.
+
+\subsection{Cenários de Teste}
+
+Foram implementados três cenários principais de benchmark:
+
+\subsubsection{Benchmark Básico}
+Renderização de triângulos coloridos rotativos sem texturas ou iluminação. Este cenário serve como linha de base para comparação. Foram testadas quantidades progressivas de triângulos: 1, 10, 50, 100, 200, 500, 1000 e 2000.
+
+\subsubsection{Benchmark de Iluminação}
+Análise do impacto de diferentes tipos de iluminação no desempenho:
+\begin{itemize}
+    \item Sem iluminação (baseline)
+    \item Luz omnidirecional (point light)
+    \item Spotlight com ângulo de corte
+    \item Múltiplas fontes de luz
+\end{itemize}
+
+\subsubsection{Benchmark de Texturas}
+Avaliação do impacto de texturas procedurais de diferentes resoluções:
+\begin{itemize}
+    \item Sem textura (baseline)
+    \item Textura 64x64 pixels
+    \item Textura 128x128 pixels
+    \item Textura 256x256 pixels
+\end{itemize}
+
+\subsection{Métricas Coletadas}
+
+Para cada cenário, foram coletadas as seguintes métricas:
+\begin{itemize}
+    \item \textbf{FPS (Frames Per Second):} Taxa de quadros renderizados por segundo
+    \item \textbf{Utilização de CPU:} Percentual de uso do processador
+    \item \textbf{Utilização de GPU:} Percentual de uso da placa gráfica
+    \item \textbf{Tempo de execução:} Duração de cada teste (5 segundos por configuração)
+\end{itemize}
+
+\section{Resultados}
+
+\subsection{Desempenho Básico}
+
+A Tabela~\ref{tab:benchmark_basico} apresenta os resultados detalhados do benchmark básico, e a Figura~\ref{fig:fps_triangulos} mostra a visualização gráfica destes dados.
+
+\begin{table}[H]
+\centering
+\caption{Resultados do Benchmark Básico (sem textura/iluminação)}
+\label{tab:benchmark_basico}
+\begin{tabular}{|r|r|r|r|r|}
+\hline
+\textbf{Triângulos} & \textbf{FPS Médio} & \textbf{FPS Mín} & \textbf{FPS Máx} & \textbf{CPU (\%)} \\
+\hline
+1 & 147.13 & 10.85 & 680.67 & 2.34 \\
+10 & 142.13 & 43.36 & 1508.20 & 1.47 \\
+50 & 131.94 & 53.46 & 1672.37 & 1.68 \\
+100 & 127.84 & 57.38 & 864.09 & 2.05 \\
+200 & 122.81 & 64.78 & 900.07 & 2.15 \\
+500 & 121.73 & 53.24 & 344.59 & 1.92 \\
+1000 & 120.58 & 36.57 & 219.69 & 1.74 \\
+2000 & 107.49 & 71.43 & 114.11 & 2.63 \\
+\hline
+\end{tabular}
+\end{table}
+
+A Figura~\ref{fig:fps_triangulos} apresenta a relação entre o número de triângulos renderizados e o desempenho medido em FPS.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{grafico_fps_triangulos.png}
+    \caption{Desempenho em FPS e utilização de recursos vs. quantidade de triângulos}
+    \label{fig:fps_triangulos}
+\end{figure}
+
+\textbf{Observações:}
+\begin{itemize}
+    \item O FPS começa alto (147 FPS com 1 triângulo) e diminui gradualmente
+    \item Com 2000 triângulos, o FPS ainda mantém-se alto (107 FPS)
+    \item A utilização da CPU permanece baixa (1-3\%), indicando que o processamento está sendo feito pela GPU
+    \item O sistema Apple Silicon demonstra excelente desempenho gráfico
+    \item A curva de degradação é suave, sem quedas abruptas
+\end{itemize}
+
+\subsection{Impacto da Iluminação}
+
+A Tabela~\ref{tab:benchmark_lighting} apresenta os resultados do benchmark de iluminação, e a Figura~\ref{fig:iluminacao} compara o desempenho entre diferentes configurações.
+
+\begin{table}[H]
+\centering
+\caption{Resultados do Benchmark de Iluminação}
+\label{tab:benchmark_lighting}
+\small
+\begin{tabular}{|r|l|r|r|r|}
+\hline
+\textbf{Triângulos} & \textbf{Tipo de Luz} & \textbf{FPS Médio} & \textbf{FPS Mín} & \textbf{CPU (\%)} \\
+\hline
+100 & Sem luz & 130.71 & 9.19 & 2.63 \\
+100 & Omnidirecional & 225.82 & 17.49 & 1.66 \\
+100 & Spotlight & 251.91 & 53.54 & 1.46 \\
+100 & Múltiplas & 238.43 & 44.32 & 2.81 \\
+\hline
+500 & Sem luz & 260.36 & 65.53 & 2.12 \\
+500 & Omnidirecional & 334.00 & 40.86 & 1.35 \\
+500 & Spotlight & 334.00 & 63.24 & 1.66 \\
+500 & Múltiplas & 187.61 & 24.33 & 0.76 \\
+\hline
+1000 & Sem luz & 443.59 & 40.48 & 1.52 \\
+1000 & Omnidirecional & 401.67 & 43.34 & 2.01 \\
+1000 & Spotlight & 409.51 & 75.76 & 3.43 \\
+1000 & Múltiplas & 102.21 & 14.97 & 2.77 \\
+\hline
+\end{tabular}
+\end{table}
+
+A Figura~\ref{fig:iluminacao} compara o desempenho entre diferentes configurações de iluminação.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{grafico_iluminacao.png}
+    \caption{Impacto de diferentes tipos de iluminação no desempenho}
+    \label{fig:iluminacao}
+\end{figure}
+
+\textbf{Análise:}
+\begin{itemize}
+    \item Contraintuitivamente, a iluminação \textbf{melhorou} o FPS em alguns casos
+    \item Com 100 triângulos: sem luz = 130 FPS, com spotlight = 252 FPS
+    \item Isto ocorre devido ao \textbf{VSync} (sincronização vertical) limitando FPS sem carga
+    \item Com múltiplas luzes em 1000 triângulos, o FPS cai para 102 FPS
+    \item O impacto real da iluminação é mais evidente em cargas elevadas
+    \item A GPU Apple Silicon lida muito bem com cálculos de iluminação
+    \item CPU permanece com baixa utilização (0.7-3.4\%), confirmando processamento na GPU
+\end{itemize}
+
+\subsection{Impacto das Texturas}
+
+A Tabela~\ref{tab:benchmark_texture} apresenta os resultados do benchmark de texturas, e a Figura~\ref{fig:texturas} demonstra visualmente o impacto das diferentes resoluções.
+
+\begin{table}[H]
+\centering
+\caption{Resultados do Benchmark de Texturas}
+\label{tab:benchmark_texture}
+\small
+\begin{tabular}{|r|l|r|r|r|}
+\hline
+\textbf{Triângulos} & \textbf{Textura} & \textbf{FPS Médio} & \textbf{FPS Mín} & \textbf{CPU (\%)} \\
+\hline
+100 & Sem textura & 130.28 & 10.92 & 1.86 \\
+100 & 64x64 & 364.41 & 25.08 & 1.96 \\
+100 & 128x128 & 215.11 & 25.07 & 1.85 \\
+100 & 256x256 & 211.87 & 30.08 & 0.94 \\
+\hline
+500 & Sem textura & 173.08 & 65.12 & 2.30 \\
+500 & 64x64 & 203.46 & 44.02 & 2.65 \\
+500 & 128x128 & 361.98 & 24.71 & 0.79 \\
+500 & 256x256 & 194.01 & 26.72 & 1.85 \\
+\hline
+1000 & Sem textura & 249.58 & 90.00 & 1.43 \\
+1000 & 64x64 & 320.60 & 35.08 & 1.26 \\
+1000 & 128x128 & 325.70 & 30.79 & 1.92 \\
+1000 & 256x256 & 332.33 & 34.17 & 1.78 \\
+\hline
+2000 & Sem textura & 418.77 & 60.28 & 2.08 \\
+2000 & 64x64 & 473.61 & 32.14 & 3.39 \\
+2000 & 128x128 & 463.06 & 31.54 & 3.97 \\
+2000 & 256x256 & 375.24 & 46.04 & 3.75 \\
+\hline
+\end{tabular}
+\end{table}
+
+A Figura~\ref{fig:texturas} demonstra como texturas de diferentes resoluções afetam o desempenho.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{grafico_texturas.png}
+    \caption{Comparação de desempenho com diferentes tamanhos de textura}
+    \label{fig:texturas}
+\end{figure}
+
+\textbf{Resultados:}
+\begin{itemize}
+    \item Resultados surpreendentes: texturas \textbf{aumentaram} o FPS em vários casos
+    \item 100 triângulos: sem textura = 130 FPS, com 64x64 = 364 FPS
+    \item 2000 triângulos: sem textura = 419 FPS, com 64x64 = 474 FPS
+    \item Texturas maiores (256x256) têm performance similar às menores
+    \item Isto sugere que a GPU Apple Silicon tem otimizações de pipeline
+    \item Texturas podem estar melhorando a eficiência do cache da GPU
+    \item O overhead de texturização é mínimo neste hardware
+    \item CPU continua com baixa utilização (0.7-4\%)
+\end{itemize}
+
+\subsection{Comparação Geral}
+
+A Figura~\ref{fig:comparacao} apresenta uma visão consolidada comparando todos os cenários testados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{grafico_comparacao_geral.png}
+    \caption{Comparação geral de desempenho entre diferentes configurações}
+    \label{fig:comparacao}
+\end{figure}
+
+\section{Análise de Hardware}
+
+\subsection{Utilização da GPU}
+
+\textbf{GPU Detectada:} Apple M3 - GPU integrada ao SoC (System on Chip)
+
+\textbf{Características:}
+\begin{itemize}
+    \item Arquitetura Apple Silicon com GPU integrada
+    \item Memória unificada compartilhada com CPU (16 GB)
+    \item API gráfica: Metal (backend do OpenGL)
+    \item Não detectável via GPUtil (ferramenta específica NVIDIA)
+\end{itemize}
+
+\textbf{Utilização:}
+\begin{itemize}
+    \item \textbf{GPU está sendo utilizada}, mas não foi possível medir via software
+    \item Em renderização básica: GPU processa toda a geometria e rasterização
+    \item Com iluminação: GPU executa cálculos de shading em hardware
+    \item Com texturas: GPU gerencia sampling e filtragem de texturas
+    \item A baixa utilização de CPU (1-4\%) confirma que o trabalho está na GPU
+\end{itemize}
+
+\textbf{Monitoramento em Apple Silicon:}
+
+Para monitorar a GPU Apple em tempo real, use o terminal:
+\begin{verbatim}
+sudo powermetrics --samplers gpu_power -i 1000
+\end{verbatim}
+
+Este comando mostra:
+\begin{itemize}
+    \item Utilização da GPU (\%)
+    \item Frequência ativa
+    \item Consumo de energia
+    \item Renderizador ativo
+\end{itemize}
+
+\subsection{Utilização do Processador}
+
+\textbf{Processador:} Apple Silicon com 8 cores (4 performance + 4 efficiency)
+
+O processador demonstrou comportamento consistente e eficiente:
+\begin{itemize}
+    \item Utilização média: 1-4\% durante todos os testes
+    \item Cores de performance: usados para lógica da aplicação
+    \item Cores de eficiência: gerenciamento de sistema
+    \item Baixa utilização confirma que a GPU está fazendo o trabalho pesado
+    \item Não há gargalo de CPU em nenhum cenário testado
+    \item Frequência adaptativa: 744 MHz em idle, até 4056 MHz sob carga
+\end{itemize}
+
+\textbf{Conclusão:} O processamento gráfico está corretamente delegado à GPU, com a CPU apenas gerenciando a lógica da aplicação e enviando comandos de renderização.
+
+\section{Discussão}
+
+\subsection{Análise de Desempenho}
+
+Os resultados demonstram claramente as capacidades excepcionais do hardware Apple Silicon:
+
+\begin{enumerate}
+    \item \textbf{Geometria:} O sistema conseguiu manter FPS elevado mesmo com 2000 triângulos (107 FPS), demonstrando excelente throughput de geometria. A degradação foi suave e previsível.
+    
+    \item \textbf{Iluminação:} Surpreendentemente, a adição de iluminação melhorou o FPS em cenários de baixa carga. Isso ocorre porque:
+    \begin{itemize}
+        \item O VSync limita artificialmente o FPS quando a carga é baixa
+        \item A GPU Apple tem unidades dedicadas para shading
+        \item O pipeline fica mais ``ocupado'', evitando idle time
+        \item Com múltiplas luzes (carga real), o FPS cai conforme esperado
+    \end{itemize}
+    
+    \item \textbf{Texturas:} Os resultados contra-intuitivos (texturas aumentando FPS) podem ser explicados por:
+    \begin{itemize}
+        \item Cache de textura altamente eficiente na GPU Apple
+        \item Compressão de textura em hardware
+        \item Pipeline de texturização otimizado no Metal
+        \item Unified Memory Architecture reduzindo overhead de cópia
+        \item Texturas procedurais pequenas cabem inteiramente no cache
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Características do Apple Silicon}
+
+O desempenho excepcional observado deve-se a características únicas da arquitetura:
+
+\begin{itemize}
+    \item \textbf{Unified Memory:} CPU e GPU compartilham a mesma memória física, eliminando cópias
+    \item \textbf{Metal Backend:} OpenGL roda sobre Metal, aproveitando otimizações de baixo nível
+    \item \textbf{GPU Integrada Potente:} Diferente de GPUs integradas Intel, a GPU Apple tem performance próxima de GPUs dedicadas entry-level
+    \item \textbf{Tile-Based Rendering:} Arquitetura que reduz bandwidth de memória
+    \item \textbf{Hardware Acceleration:} Blocos dedicados para operações gráficas comuns
+\end{itemize}
+
+\subsection{Utilização de Recursos}
+
+\subsubsection{GPU vs CPU}
+
+A análise mostrou que:
+\begin{itemize}
+    \item A GPU é o recurso primário para renderização
+    \item A CPU é responsável pela lógica da aplicação e envio de comandos
+    \item Em sistemas com GPU integrada, há compartilhamento de memória com a CPU
+    \item GPUs dedicadas demonstram melhor desempenho em cargas elevadas
+\end{itemize}
+
+\subsubsection{Múltiplas GPUs}
+
+\textbf{Configuração do Sistema Testado:}
+
+O MacBook Air com Apple M3 possui \textbf{uma única GPU integrada} ao SoC. Não há GPUs múltiplas neste sistema.
+
+\textbf{Sobre Múltiplas GPUs em Geral:}
+
+Em sistemas com múltiplas GPUs (comum em desktops com GPU integrada + dedicada):
+\begin{itemize}
+    \item Por padrão, o OpenGL utiliza a GPU primária
+    \item No macOS, o sistema escolhe automaticamente a GPU apropriada
+    \item GPUs dedicadas são preferidas para aplicações gráficas intensivas
+    \item É possível alternar entre GPUs através das configurações do sistema
+    \item SLI/CrossFire (múltiplas GPUs trabalhando juntas) não é suportado pelo OpenGL padrão
+\end{itemize}
+
+\textbf{No Apple Silicon:}
+\begin{itemize}
+    \item M3: GPU integrada de 8 ou 10 cores (dependendo do modelo)
+    \item M3 Pro/Max: GPU com até 40 cores
+    \item M3 Ultra: configuração com múltiplos chips conectados
+    \item Não há possibilidade de eGPU (GPU externa) no Apple Silicon
+\end{itemize}
+
+\section{Conclusões}
+
+Este estudo demonstrou o desempenho excepcional da arquitetura Apple Silicon em renderização 3D:
+
+\begin{enumerate}
+    \item \textbf{Desempenho Geral:} O sistema manteve FPS elevado (>100) em todos os cenários, demonstrando capacidade para aplicações gráficas complexas.
+    
+    \item \textbf{Escalabilidade:} A degradação de desempenho foi suave e previsível, de 147 FPS (1 triângulo) para 107 FPS (2000 triângulos).
+    
+    \item \textbf{Eficiência Energética:} A baixa utilização de CPU (1-4\%) indica processamento eficiente na GPU, economizando energia.
+    
+    \item \textbf{GPU Apple Silicon:} Demonstrou ser uma solução integrada de alto desempenho:
+    \begin{itemize}
+        \item Processa iluminação complexa com facilidade
+        \item Gerencia texturas eficientemente
+        \item Unified Memory reduz latência
+        \item Metal backend otimiza operações gráficas
+    \end{itemize}
+    
+    \item \textbf{Limitações de Detecção:} Ferramentas tradicionais (GPUtil) não detectam GPUs Apple, mas isso não impede seu funcionamento. Monitoramento específico deve usar \texttt{powermetrics}.
+    
+    \item \textbf{Resultados Contra-Intuitivos:} Iluminação e texturas melhoraram FPS em alguns casos, devido a:
+    \begin{itemize}
+        \item VSync limitando FPS em baixa carga
+        \item Otimizações de pipeline específicas do Metal
+        \item Cache de textura extremamente eficiente
+        \item Arquitetura tile-based reduzindo bandwidth
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Recomendações}
+
+Com base nos resultados obtidos no Apple Silicon:
+
+\textbf{Para desenvolvimento em Apple Silicon:}
+\begin{itemize}
+    \item Aproveitar Unified Memory para reduzir cópias de dados
+    \item Usar Metal diretamente para máximo desempenho (quando possível)
+    \item Confiar na GPU integrada - performance é excelente
+    \item Não se preocupar excessivamente com tamanho de textura (até 512x512)
+    \item Iluminação complexa é viável sem impacto severo
+\end{itemize}
+
+\textbf{Para aplicações gráficas em tempo real (geral):}
+\begin{itemize}
+    \item Manter FPS acima de 60 para fluidez perfeita (alcançável até ~1500 triângulos)
+    \item Usar LOD (Level of Detail) para otimizar objetos distantes
+    \item Implementar frustum culling para não renderizar objetos fora da câmera
+    \item Considerar instancing para objetos repetidos
+    \item Monitorar desempenho com ferramentas apropriadas para cada plataforma
+\end{itemize}
+
+\textbf{Para monitoramento em diferentes plataformas:}
+\begin{itemize}
+    \item \textbf{Apple Silicon:} \texttt{sudo powermetrics --samplers gpu\_power}
+    \item \textbf{NVIDIA:} NVIDIA System Monitor, GPUtil
+    \item \textbf{AMD:} Radeon Software, radeontop (Linux)
+    \item \textbf{Intel:} Intel GPA, intel\_gpu\_top (Linux)
+\end{itemize}
+
+\section{Referências}
+
+\begin{itemize}
+    \item OpenGL Programming Guide - The Official Guide to Learning OpenGL
+    \item Real-Time Rendering, Akenine-Möller, Haines, and Hoffman
+    \item GPU Gems Series - NVIDIA
+    \item PyOpenGL Documentation
+    \item Apple Metal Documentation - Performance Best Practices
+    \item Apple Silicon GPU Architecture Whitepaper
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,86 @@
+{
+    "timestamp": "2025-10-29T09:07:02.203129",
+    "system_info": {
+        "cpu": 8,
+        "cpu_logical": 8,
+        "cpu_freq": 4056,
+        "ram": 16.0,
+        "gpu_available": false,
+        "gpu_count": 0,
+        "gpu_info": []
+    },
+    "results": [
+        {
+            "triangle_count": 1,
+            "avg_fps": 147.131668998793,
+            "min_fps": 10.854458830318856,
+            "max_fps": 680.6725089256735,
+            "avg_cpu": 2.3443123938879458,
+            "avg_gpu": 0,
+            "total_frames": 589
+        },
+        {
+            "triangle_count": 10,
+            "avg_fps": 142.1296904030575,
+            "min_fps": 43.35959806891133,
+            "max_fps": 1508.1999280834232,
+            "avg_cpu": 1.4727424749163878,
+            "avg_gpu": 0,
+            "total_frames": 598
+        },
+        {
+            "triangle_count": 50,
+            "avg_fps": 131.93676170449717,
+            "min_fps": 53.46399663484213,
+            "max_fps": 1672.3700159489633,
+            "avg_cpu": 1.6815000000000002,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 100,
+            "avg_fps": 127.84387908397133,
+            "min_fps": 57.37918958111029,
+            "max_fps": 864.0922950144211,
+            "avg_cpu": 2.0537562604340565,
+            "avg_gpu": 0,
+            "total_frames": 599
+        },
+        {
+            "triangle_count": 200,
+            "avg_fps": 122.80539223397346,
+            "min_fps": 64.77589535296752,
+            "max_fps": 900.0652360515021,
+            "avg_cpu": 2.1476666666666664,
+            "avg_gpu": 0,
+            "total_frames": 600
+        },
+        {
+            "triangle_count": 500,
+            "avg_fps": 121.72538969556014,
+            "min_fps": 53.24004518856069,
+            "max_fps": 344.58626355570163,
+            "avg_cpu": 1.915025041736227,
+            "avg_gpu": 0,
+            "total_frames": 599
+        },
+        {
+            "triangle_count": 1000,
+            "avg_fps": 120.57886838123324,
+            "min_fps": 36.573660850533216,
+            "max_fps": 219.68908443327047,
+            "avg_cpu": 1.7408403361344538,
+            "avg_gpu": 0,
+            "total_frames": 595
+        },
+        {
+            "triangle_count": 2000,
+            "avg_fps": 107.49235143343307,
+            "min_fps": 71.42888283378747,
+            "max_fps": 114.10588171282441,
+            "avg_cpu": 2.6278195488721803,
+            "avg_gpu": 0,
+            "total_frames": 532
+        }
+    ]
+}
