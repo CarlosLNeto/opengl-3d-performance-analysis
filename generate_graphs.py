@@ -131,6 +131,124 @@ class GraphGenerator:
         self.figures.append('grafico_iluminacao.png')
         plt.close()
     
+    def plot_texture_comparison(self, data):
+        """Gera gráfico comparativo de texturas"""
+        if not data:
+            return
+        
+        results = data['results']
+        texture_types = {}
+        
+        for r in results:
+            tex = r['texture_size']
+            if tex not in texture_types:
+                texture_types[tex] = {'counts': [], 'fps': [], 'cpu': [], 'gpu': []}
+            texture_types[tex]['counts'].append(r['triangle_count'])
+            texture_types[tex]['fps'].append(r['avg_fps'])
+            texture_types[tex]['cpu'].append(r['avg_cpu'])
+            texture_types[tex]['gpu'].append(r.get('avg_gpu', 0))
+        
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+        
+        colors = {'none': 'blue', '64x64': 'green', '128x128': 'orange', '256x256': 'red'}
+        markers = {'none': 'o', '64x64': 's', '128x128': '^', '256x256': 'd'}
+        labels = {'none': 'Sem Textura', '64x64': '64x64', '128x128': '128x128', '256x256': '256x256'}
+        
+        # Gráfico FPS
+        for tex, values in sorted(texture_types.items(), key=lambda x: 0 if x[0] == 'none' else int(x[0].split('x')[0])):
+            ax1.plot(values['counts'], values['fps'], 
+                    color=colors.get(tex, 'black'), 
+                    marker=markers.get(tex, 'o'),
+                    label=labels.get(tex, tex), linewidth=2, markersize=8)
+        
+        ax1.set_xlabel('Número de Triângulos', fontsize=12)
+        ax1.set_ylabel('FPS Médio', fontsize=12)
+        ax1.set_title('Impacto das Texturas no FPS', fontsize=14, fontweight='bold')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # Gráfico CPU
+        for tex, values in sorted(texture_types.items(), key=lambda x: 0 if x[0] == 'none' else int(x[0].split('x')[0])):
+            ax2.plot(values['counts'], values['cpu'], 
+                    color=colors.get(tex, 'black'),
+                    marker=markers.get(tex, 'o'),
+                    label=labels.get(tex, tex), linewidth=2, markersize=8)
+        
+        ax2.set_xlabel('Número de Triângulos', fontsize=12)
+        ax2.set_ylabel('Utilização CPU (%)', fontsize=12)
+        ax2.set_title('Impacto das Texturas na CPU', fontsize=14, fontweight='bold')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig('grafico_texturas.png', dpi=300, bbox_inches='tight')
+        self.figures.append('grafico_texturas.png')
+        plt.close()
+    
+    def plot_general_comparison(self, basic_data, lighting_data, texture_data):
+        """Gera gráfico de comparação geral entre todos os cenários"""
+        if not basic_data or not lighting_data or not texture_data:
+            print("⚠️  Dados insuficientes para gráfico de comparação geral")
+            return
+        
+        fig, ax = plt.subplots(figsize=(12, 7))
+        
+        # Dados do benchmark básico (1000 triângulos)
+        basic_results = [r for r in basic_data['results'] if r['triangle_count'] == 1000]
+        if basic_results:
+            basic_fps = basic_results[0]['avg_fps']
+            ax.bar(0, basic_fps, color='blue', label='Básico', width=0.6)
+            ax.text(0, basic_fps + 5, f'{basic_fps:.1f}', ha='center', fontsize=10, fontweight='bold')
+        
+        # Dados de iluminação (1000 triângulos)
+        x_pos = 1
+        light_types_order = ['none', 'omnidirectional', 'spot', 'multiple']
+        light_colors = {'none': 'lightblue', 'omnidirectional': 'lightgreen', 
+                       'spot': 'lightyellow', 'multiple': 'lightcoral'}
+        
+        for light_type in light_types_order:
+            light_results = [r for r in lighting_data['results'] 
+                           if r['triangle_count'] == 1000 and r['light_type'] == light_type]
+            if light_results:
+                fps = light_results[0]['avg_fps']
+                ax.bar(x_pos, fps, color=light_colors.get(light_type, 'gray'), 
+                      label=f'Luz: {light_type}', width=0.6)
+                ax.text(x_pos, fps + 5, f'{fps:.1f}', ha='center', fontsize=9)
+                x_pos += 1
+        
+        # Dados de textura (1000 triângulos)
+        texture_order = ['none', '64x64', '128x128', '256x256']
+        texture_colors = {'none': 'lightblue', '64x64': 'lightgreen', 
+                         '128x128': 'lightyellow', '256x256': 'lightcoral'}
+        
+        for tex_size in texture_order:
+            tex_results = [r for r in texture_data['results'] 
+                          if r['triangle_count'] == 1000 and r['texture_size'] == tex_size]
+            if tex_results:
+                fps = tex_results[0]['avg_fps']
+                label = 'Sem Tex' if tex_size == 'none' else f'Tex: {tex_size}'
+                ax.bar(x_pos, fps, color=texture_colors.get(tex_size, 'gray'), 
+                      label=label, width=0.6)
+                ax.text(x_pos, fps + 5, f'{fps:.1f}', ha='center', fontsize=9)
+                x_pos += 1
+        
+        ax.set_ylabel('FPS Médio', fontsize=12)
+        ax.set_title('Comparação Geral de Desempenho (1000 Triângulos)', 
+                    fontsize=14, fontweight='bold')
+        ax.legend(loc='upper right', fontsize=9, ncol=2)
+        ax.grid(True, alpha=0.3, axis='y')
+        ax.set_xticks([])
+        
+        # Adicionar linha de referência
+        if basic_results:
+            ax.axhline(y=basic_fps, color='r', linestyle='--', alpha=0.3, 
+                      label=f'Baseline: {basic_fps:.1f} FPS')
+        
+        plt.tight_layout()
+        plt.savefig('grafico_comparacao_geral.png', dpi=300, bbox_inches='tight')
+        self.figures.append('grafico_comparacao_geral.png')
+        plt.close()
+    
     def generate_all_graphs(self):
         """Gera todos os gráficos"""
         print("\n=== Gerando Gráficos ===\n")
@@ -139,11 +257,29 @@ class GraphGenerator:
         lighting_data = self.load_json('benchmark_lighting.json')
         texture_data = self.load_json('benchmark_textura.json')
         
-        self.plot_basic_benchmark(basic_data)
-        self.plot_lighting_comparison(lighting_data)
-        # ... outros gráficos ...
+        if basic_data:
+            print("📊 Gerando gráfico de benchmark básico...")
+            self.plot_basic_benchmark(basic_data)
+        else:
+            print("⚠️  Dados de benchmark básico não encontrados")
         
-        print(f"\nTotal de {len(self.figures)} gráficos gerados!")
+        if lighting_data:
+            print("📊 Gerando gráfico de iluminação...")
+            self.plot_lighting_comparison(lighting_data)
+        else:
+            print("⚠️  Dados de benchmark de iluminação não encontrados")
+        
+        if texture_data:
+            print("📊 Gerando gráfico de texturas...")
+            self.plot_texture_comparison(texture_data)
+        else:
+            print("⚠️  Dados de benchmark de texturas não encontrados")
+        
+        if basic_data and lighting_data and texture_data:
+            print("📊 Gerando gráfico de comparação geral...")
+            self.plot_general_comparison(basic_data, lighting_data, texture_data)
+        
+        print(f"\n✅ Total de {len(self.figures)} gráficos gerados!")
         return self.figures
 
 
