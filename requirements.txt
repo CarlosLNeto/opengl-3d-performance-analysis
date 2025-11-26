@@ -1,0 +1,20 @@
+# OpenGL 3D Performance Analysis - Python Dependencies
+# Developed for Digital Image Processing course at UEA
+
+# OpenGL interface
+PyOpenGL==3.1.10
+
+# Window management and input handling
+pygame==2.6.1
+
+# Numerical processing
+numpy==2.3.4
+
+# Graph generation and visualization
+matplotlib==3.10.7
+
+# System monitoring (CPU, GPU, Memory)
+psutil==7.1.2
+
+# GPU monitoring (Note: Limited support for Apple Silicon)
+GPUtil==1.4.0
